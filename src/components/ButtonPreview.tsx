@@ -6,7 +6,7 @@ interface ButtonPreviewProps {
   preview: boolean;
 }
 
-export function ButtonPreview({ preview }: ButtonPreviewProps) {
+export function ButtonPreview({ preview }: ButtonPreviewProps): JSX.Element {
   return (
     <>
       {preview && (
