@@ -13,12 +13,13 @@ import { getPrismicClient } from '../../services/prismic';
 
 import commonStyles from '../../styles/common.module.scss';
 import styles from './post.module.scss';
-import { formatDate } from '../../util/format';
+import { formatDate, formatEditedPostDate } from '../../util/format';
 import { ButtonPreview } from '../../components/ButtonPreview';
 import Comments from '../../components/Comments';
 
 interface Post {
   first_publication_date: string | null;
+  last_publication_date: string | null;
   data: {
     title: string;
     banner: {
@@ -92,6 +93,15 @@ export default function Post({
 
   const dateFormatted = formatDate(post.first_publication_date);
 
+  const isPostEdited =
+    post.first_publication_date !== post.last_publication_date;
+
+  let editedPostDate: string;
+
+  if (isPostEdited) {
+    editedPostDate = formatEditedPostDate(post.last_publication_date);
+  }
+
   return (
     <>
       <Head>
@@ -123,6 +133,8 @@ export default function Post({
               {`${readingTime} min`}
             </li>
           </ul>
+
+          {isPostEdited && <span>{editedPostDate}</span>}
         </section>
 
         {post.data.content.map(content => {
@@ -218,6 +230,7 @@ export const getStaticProps: GetStaticProps = async ({
   const post = {
     uid: response.uid,
     first_publication_date: response.first_publication_date,
+    last_publication_date: response.last_publication_date,
     data: {
       title: response.data.title,
       subtitle: response.data.subtitle,
